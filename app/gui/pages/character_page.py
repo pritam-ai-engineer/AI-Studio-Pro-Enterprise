@@ -3,9 +3,9 @@
 AI Studio Pro Enterprise
 
 Module      : Character Page
-Purpose     : Character Management Page
+Purpose     : Enterprise Character Manager
 Author      : Pritam Kumar
-Version     : 0.3.1
+Version     : 0.4.1
 ============================================================
 """
 
@@ -21,89 +21,83 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
 )
 
+from app.controllers.character_controller import CharacterController
 from app.gui.table_models.character_table_model import CharacterTableModel
 
 
 class CharacterPage(QWidget):
     """
-    Enterprise Character Management Page.
+    Enterprise Character Manager
     """
 
     def __init__(self):
+
         super().__init__()
 
         self.model = CharacterTableModel()
 
+        self.controller = CharacterController(self)
+
         self.build_ui()
 
-    # ======================================================
-    # Build User Interface
-    # ======================================================
+        self.connect_signals()
+
+    # --------------------------------------------------
 
     def build_ui(self):
 
-        main_layout = QVBoxLayout(self)
+        layout = QVBoxLayout(self)
 
-        # --------------------------------------------------
+        layout.setContentsMargins(15, 15, 15, 15)
+
+        layout.setSpacing(12)
+
+        # ==================================================
         # Header
-        # --------------------------------------------------
+        # ==================================================
 
-        header_layout = QHBoxLayout()
+        header = QHBoxLayout()
 
         title = QLabel("Characters")
 
         title.setStyleSheet("""
-            font-size:28px;
-            font-weight:bold;
+            QLabel{
+                font-size:30px;
+                font-weight:bold;
+            }
         """)
 
         self.new_button = QPushButton("➕ New Character")
 
-        self.new_button.setMinimumHeight(35)
+        self.new_button.setMinimumHeight(40)
 
-        header_layout.addWidget(title)
+        self.new_button.setMinimumWidth(170)
 
-        header_layout.addStretch()
+        header.addWidget(title)
 
-        header_layout.addWidget(self.new_button)
+        header.addStretch()
 
-        # --------------------------------------------------
-        # Search Box
-        # --------------------------------------------------
+        header.addWidget(self.new_button)
+
+        # ==================================================
+        # Search
+        # ==================================================
 
         self.search = QLineEdit()
 
-        self.search.setPlaceholderText(
-            "🔍 Search characters..."
-        )
+        self.search.setPlaceholderText("🔍 Search Characters...")
 
-        self.search.setMinimumHeight(34)
+        self.search.setMinimumHeight(38)
 
-        # --------------------------------------------------
+        # ==================================================
         # Table
-        # --------------------------------------------------
+        # ==================================================
 
         self.table = QTableView()
 
         self.table.setModel(self.model)
 
-        # Stretch columns
-        header = self.table.horizontalHeader()
-
-        header.setSectionResizeMode(
-            QHeaderView.Stretch
-        )
-
-        header.setStretchLastSection(True)
-
-        # Appearance
-        self.table.verticalHeader().setVisible(False)
-
         self.table.setAlternatingRowColors(True)
-
-        self.table.setShowGrid(False)
-
-        self.table.setSortingEnabled(True)
 
         self.table.setSelectionBehavior(
             QAbstractItemView.SelectRows
@@ -117,42 +111,93 @@ class CharacterPage(QWidget):
             QAbstractItemView.NoEditTriggers
         )
 
-        # --------------------------------------------------
+        self.table.setShowGrid(False)
+
+        self.table.setSortingEnabled(True)
+
+        self.table.setWordWrap(False)
+
+        self.table.setCornerButtonEnabled(False)
+
+        self.table.verticalHeader().setVisible(False)
+
+        self.table.verticalHeader().setDefaultSectionSize(34)
+
+        header_view = self.table.horizontalHeader()
+
+        header_view.setStretchLastSection(True)
+
+        header_view.setDefaultAlignment(
+            self.table.horizontalHeader().defaultAlignment()
+        )
+
+        header_view.setSectionResizeMode(
+            0,
+            QHeaderView.Stretch
+        )
+
+        header_view.setSectionResizeMode(
+            1,
+            QHeaderView.ResizeToContents
+        )
+
+        header_view.setSectionResizeMode(
+            2,
+            QHeaderView.ResizeToContents
+        )
+
+        header_view.setSectionResizeMode(
+            3,
+            QHeaderView.ResizeToContents
+        )
+
+        header_view.setSectionResizeMode(
+            4,
+            QHeaderView.ResizeToContents
+        )
+
+        # ==================================================
         # Footer
-        # --------------------------------------------------
+        # ==================================================
 
         self.status = QLabel()
 
+        self.status.setStyleSheet("""
+            QLabel{
+                color:gray;
+                font-size:12px;
+            }
+        """)
+
         self.update_status()
 
-        # --------------------------------------------------
-        # Layout
-        # --------------------------------------------------
+        # ==================================================
 
-        main_layout.addLayout(header_layout)
+        layout.addLayout(header)
 
-        main_layout.addWidget(self.search)
+        layout.addWidget(self.search)
 
-        main_layout.addWidget(self.table)
+        layout.addWidget(self.table)
 
-        main_layout.addWidget(self.status)
+        layout.addWidget(self.status)
 
-    # ======================================================
-    # Refresh
-    # ======================================================
+    # --------------------------------------------------
+
+    def connect_signals(self):
+
+        self.new_button.clicked.connect(
+            self.controller.new_character
+        )
+
+    # --------------------------------------------------
 
     def refresh(self):
-        """
-        Reload data from database.
-        """
 
         self.model.load()
 
         self.update_status()
 
-    # ======================================================
-    # Status
-    # ======================================================
+    # --------------------------------------------------
 
     def update_status(self):
 

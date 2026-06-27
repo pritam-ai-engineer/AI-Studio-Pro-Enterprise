@@ -3,14 +3,13 @@
 AI Studio Pro Enterprise
 
 Module      : Character Table Model
-Purpose     : Display Characters inside QTableView
+Purpose     : Enterprise Character Table Model
 Author      : Pritam Kumar
-Version     : 0.3.0
+Version     : 0.4.1
 ============================================================
 """
 
-from PySide6.QtCore import Qt
-from PySide6.QtCore import QAbstractTableModel
+from PySide6.QtCore import Qt, QAbstractTableModel
 
 from app.services.character_service import CharacterService
 
@@ -38,7 +37,7 @@ class CharacterTableModel(QAbstractTableModel):
 
         self.load()
 
-    # --------------------------------------------------
+    # -------------------------------------------------
 
     def load(self):
 
@@ -48,69 +47,73 @@ class CharacterTableModel(QAbstractTableModel):
 
         self.endResetModel()
 
-    # --------------------------------------------------
+    # -------------------------------------------------
 
     def rowCount(self, parent=None):
 
         return len(self.characters)
 
-    # --------------------------------------------------
+    # -------------------------------------------------
 
     def columnCount(self, parent=None):
 
         return len(self.HEADERS)
 
-    # --------------------------------------------------
+    # -------------------------------------------------
 
-    def headerData(
-        self,
-        section,
-        orientation,
-        role
-    ):
-
-        if role != Qt.DisplayRole:
-            return None
+    def headerData(self, section, orientation, role):
 
         if orientation == Qt.Horizontal:
 
-            return self.HEADERS[section]
+            if role == Qt.DisplayRole:
+                return self.HEADERS[section]
 
-        return str(section + 1)
+            if role == Qt.TextAlignmentRole:
+                return Qt.AlignLeft | Qt.AlignVCenter
 
-    # --------------------------------------------------
+        if orientation == Qt.Vertical:
 
-    def data(
-        self,
-        index,
-        role
-    ):
+            if role == Qt.DisplayRole:
+                return str(section + 1)
+
+        return None
+
+    # -------------------------------------------------
+
+    def data(self, index, role):
 
         if not index.isValid():
-
-            return None
-
-        if role != Qt.DisplayRole:
-
             return None
 
         row = self.characters[index.row()]
-
         column = index.column()
 
-        if column == 0:
-            return row["name"]
+        if role == Qt.DisplayRole:
 
-        elif column == 1:
-            return row["personality"]
+            if column == 0:
+                return row.get("name", "")
 
-        elif column == 2:
-            return row["voice"]
+            elif column == 1:
+                return row.get("personality", "")
 
-        elif column == 3:
-            return row["tags"]
+            elif column == 2:
+                return row.get("voice", "")
 
-        elif column == 4:
-            return row["created_at"]
+            elif column == 3:
+                return row.get("tags", "")
+
+            elif column == 4:
+                return row.get("created_at", "")
+
+        if role == Qt.TextAlignmentRole:
+            return Qt.AlignLeft | Qt.AlignVCenter
 
         return None
+
+    # -------------------------------------------------
+
+    def refresh(self):
+        """
+        Reload data from database.
+        """
+        self.load()
