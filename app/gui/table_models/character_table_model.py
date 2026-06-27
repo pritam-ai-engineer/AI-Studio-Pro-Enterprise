@@ -5,7 +5,7 @@ AI Studio Pro Enterprise
 Module      : Character Table Model
 Purpose     : Enterprise Character Table Model
 Author      : Pritam Kumar
-Version     : 0.4.1
+Version     : 0.5.0
 ============================================================
 """
 
@@ -49,6 +49,12 @@ class CharacterTableModel(QAbstractTableModel):
 
     # -------------------------------------------------
 
+    def refresh(self):
+
+        self.load()
+
+    # -------------------------------------------------
+
     def rowCount(self, parent=None):
 
         return len(self.characters)
@@ -66,14 +72,17 @@ class CharacterTableModel(QAbstractTableModel):
         if orientation == Qt.Horizontal:
 
             if role == Qt.DisplayRole:
+
                 return self.HEADERS[section]
 
             if role == Qt.TextAlignmentRole:
+
                 return Qt.AlignLeft | Qt.AlignVCenter
 
         if orientation == Qt.Vertical:
 
             if role == Qt.DisplayRole:
+
                 return str(section + 1)
 
         return None
@@ -83,37 +92,81 @@ class CharacterTableModel(QAbstractTableModel):
     def data(self, index, role):
 
         if not index.isValid():
+
             return None
 
         row = self.characters[index.row()]
+
         column = index.column()
 
         if role == Qt.DisplayRole:
 
             if column == 0:
+
                 return row.get("name", "")
 
             elif column == 1:
+
                 return row.get("personality", "")
 
             elif column == 2:
+
                 return row.get("voice", "")
 
             elif column == 3:
+
                 return row.get("tags", "")
 
             elif column == 4:
+
                 return row.get("created_at", "")
 
         if role == Qt.TextAlignmentRole:
+
             return Qt.AlignLeft | Qt.AlignVCenter
 
         return None
 
     # -------------------------------------------------
+    # New Helper Methods
+    # -------------------------------------------------
 
-    def refresh(self):
+    def get_character(self, row):
+
         """
-        Reload data from database.
+        Return character dictionary for a row.
         """
-        self.load()
+
+        if row < 0 or row >= len(self.characters):
+
+            return None
+
+        return self.characters[row]
+
+    # -------------------------------------------------
+
+    def get_character_id(self, row):
+
+        """
+        Return database id of selected character.
+        """
+
+        character = self.get_character(row)
+
+        if character is None:
+
+            return None
+
+        return character.get("id")
+
+    # -------------------------------------------------
+
+    def get_selected_name(self, row):
+
+        character = self.get_character(row)
+
+        if character is None:
+
+            return ""
+
+        return character.get("name", "")
