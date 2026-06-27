@@ -1,30 +1,83 @@
 """
+============================================================
 AI Studio Pro Enterprise
+
 Character Page
+============================================================
 """
 
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QFont
-from PySide6.QtWidgets import QLabel, QVBoxLayout, QWidget
+from PySide6.QtWidgets import (
+    QWidget,
+    QVBoxLayout,
+    QHBoxLayout,
+    QLabel,
+    QPushButton,
+    QLineEdit,
+    QTableView,
+)
 
 
 class CharacterPage(QWidget):
-    """Character management page."""
+    """
+    Character Management Page.
+    """
 
     def __init__(self):
         super().__init__()
 
+        self.build_ui()
+
+    def build_ui(self):
+
         layout = QVBoxLayout(self)
 
-        title = QLabel("Character Manager")
+        # -----------------------------
+        # Header
+        # -----------------------------
 
-        font = QFont()
-        font.setPointSize(20)
-        font.setBold(True)
+        header = QHBoxLayout()
 
-        title.setFont(font)
-        title.setAlignment(Qt.AlignCenter)
+        title = QLabel("Characters")
 
-        layout.addStretch()
-        layout.addWidget(title)
-        layout.addStretch()
+        title.setStyleSheet("""
+            font-size:22px;
+            font-weight:bold;
+        """)
+
+        self.new_button = QPushButton("➕ New Character")
+
+        header.addWidget(title)
+
+        header.addStretch()
+
+        header.addWidget(self.new_button)
+
+        # -----------------------------
+        # Search
+        # -----------------------------
+
+        self.search = QLineEdit()
+
+        self.search.setPlaceholderText(
+            "Search characters..."
+        )
+
+        # -----------------------------
+        # Table
+        # -----------------------------
+
+        self.table = QTableView()
+
+        # -----------------------------
+        # Footer
+        # -----------------------------
+
+        self.status = QLabel("0 Characters")
+
+        layout.addLayout(header)
+
+        layout.addWidget(self.search)
+
+        layout.addWidget(self.table)
+
+        layout.addWidget(self.status)
