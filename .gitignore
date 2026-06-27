@@ -1,0 +1,25 @@
+# Virtual Environment
+.venv/
+
+# Python
+__pycache__/
+*.pyc
+
+# Database
+*.db
+
+# VS Code
+.vscode/
+
+# Environment
+.env
+
+# Logs
+*.log
+
+# Build
+dist/
+build/
+
+# Tests
+.pytest_cache/
