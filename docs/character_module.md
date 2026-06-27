@@ -1,37 +1,22 @@
-# Character Module
+## Character Model
 
-## Purpose
+The Character model represents a single AI character.
 
-Stores all AI characters used by AI Studio Pro Enterprise.
+### Required
 
-## Architecture
+- name
 
-GUI
+### Optional
 
-↓
+- nickname
+- personality
+- description
+- voice
+- avatar
+- tags
 
-Controller
+### Automatically Generated
 
-↓
-
-Service
-
-↓
-
-Repository
-
-↓
-
-SQLite
-
-## Responsibilities
-
-- Create Character
-
-- Update Character
-
-- Delete Character
-
-- Search Character
-
-- Export Character
+- uuid
+- created_at
+- updated_at
