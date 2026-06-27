@@ -3,28 +3,26 @@
 AI Studio Pro Enterprise
 
 Module      : Main Window
-Purpose     : Enterprise Application Shell
+Purpose     : Assemble the desktop shell
 Author      : Pritam Kumar
-Version     : 0.2.0
+Version     : 0.2.0-beta
 ============================================================
 """
 
-import sys
-
-from PySide6.QtWidgets import (
-    QApplication,
-    QMainWindow,
-    QWidget,
-    QVBoxLayout,
-)
+from PySide6.QtWidgets import QMainWindow
 
 from app.config.settings import (
+    WINDOW_HEIGHT,
     WINDOW_TITLE,
     WINDOW_WIDTH,
-    WINDOW_HEIGHT,
 )
 
+from app.controllers.navigation_controller import NavigationController
+
+from app.gui.ui_builder import UIBuilder
+
 from app.gui.widgets.menu_bar import MenuBarWidget
+from app.gui.widgets.status_bar import StatusBarWidget
 from app.gui.widgets.toolbar import ToolbarWidget
 
 
@@ -36,80 +34,82 @@ class MainWindow(QMainWindow):
     """
 
     def __init__(self):
+
         super().__init__()
 
         self.configure_window()
-        self.build_ui()
+
         self.create_menu()
-        
-        def create_toolbar(self):
-            """
-            Create application toolbar.
-            """
-            self.toolbar = ToolbarWidget(self)
-            self.addToolBar(self.toolbar)
-        
+
         self.create_toolbar()
-        self.create_connections()
+
+        self.create_workspace()
+
+        self.create_statusbar()
+
+        self.connect_navigation()
+
+    # -------------------------------------------------
+    # Window
     # -------------------------------------------------
 
     def configure_window(self):
-        """
-        Configure application window.
-        """
 
         self.setWindowTitle(WINDOW_TITLE)
+
         self.resize(WINDOW_WIDTH, WINDOW_HEIGHT)
 
     # -------------------------------------------------
-
-    def build_ui(self):
-        """
-        Build the central widget.
-        """
-
-        central_widget = QWidget()
-
-        self.setCentralWidget(central_widget)
-
-        self.main_layout = QVBoxLayout()
-
-        central_widget.setLayout(self.main_layout)
-
+    # Menu
     # -------------------------------------------------
 
     def create_menu(self):
-        """
-        Create application menu bar.
-        """
 
-        self.menu_bar = MenuBarWidget(self)
+        self.menu = MenuBarWidget(self)
 
-        self.setMenuBar(self.menu_bar)
+        self.setMenuBar(self.menu)
 
     # -------------------------------------------------
+    # Toolbar
+    # -------------------------------------------------
 
-    def create_connections(self):
-        """
-        Placeholder for future signal-slot connections.
-        """
+    def create_toolbar(self):
 
-        pass
+        self.toolbar = ToolbarWidget(self)
 
+        self.addToolBar(self.toolbar)
 
-# =========================================================
-# Application Entry
-# =========================================================
+    # -------------------------------------------------
+    # Central UI
+    # -------------------------------------------------
 
-def main():
-    app = QApplication(sys.argv)
+    def create_workspace(self):
 
-    window = MainWindow()
+        (
+            self.sidebar,
+            self.workspace,
+        ) = UIBuilder.build(self)
 
-    window.show()
+    # -------------------------------------------------
+    # Status Bar
+    # -------------------------------------------------
 
-    sys.exit(app.exec())
+    def create_statusbar(self):
 
+        self.status = StatusBarWidget()
 
-if __name__ == "__main__":
-    main()
+        self.setStatusBar(self.status)
+
+    # -------------------------------------------------
+    # Navigation
+    # -------------------------------------------------
+
+    def connect_navigation(self):
+
+        self.navigation = NavigationController(
+
+            self.sidebar,
+
+            self.workspace,
+
+        )
