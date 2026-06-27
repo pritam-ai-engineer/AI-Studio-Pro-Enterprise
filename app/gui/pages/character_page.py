@@ -2,7 +2,10 @@
 ============================================================
 AI Studio Pro Enterprise
 
-Character Page
+Module      : Character Page
+Purpose     : Character Management Page
+Author      : Pritam Kumar
+Version     : 0.3.1
 ============================================================
 """
 
@@ -14,70 +17,151 @@ from PySide6.QtWidgets import (
     QPushButton,
     QLineEdit,
     QTableView,
+    QHeaderView,
+    QAbstractItemView,
 )
+
+from app.gui.table_models.character_table_model import CharacterTableModel
 
 
 class CharacterPage(QWidget):
     """
-    Character Management Page.
+    Enterprise Character Management Page.
     """
 
     def __init__(self):
         super().__init__()
 
+        self.model = CharacterTableModel()
+
         self.build_ui()
+
+    # ======================================================
+    # Build User Interface
+    # ======================================================
 
     def build_ui(self):
 
-        layout = QVBoxLayout(self)
+        main_layout = QVBoxLayout(self)
 
-        # -----------------------------
+        # --------------------------------------------------
         # Header
-        # -----------------------------
+        # --------------------------------------------------
 
-        header = QHBoxLayout()
+        header_layout = QHBoxLayout()
 
         title = QLabel("Characters")
 
         title.setStyleSheet("""
-            font-size:22px;
+            font-size:28px;
             font-weight:bold;
         """)
 
         self.new_button = QPushButton("➕ New Character")
 
-        header.addWidget(title)
+        self.new_button.setMinimumHeight(35)
 
-        header.addStretch()
+        header_layout.addWidget(title)
 
-        header.addWidget(self.new_button)
+        header_layout.addStretch()
 
-        # -----------------------------
-        # Search
-        # -----------------------------
+        header_layout.addWidget(self.new_button)
+
+        # --------------------------------------------------
+        # Search Box
+        # --------------------------------------------------
 
         self.search = QLineEdit()
 
         self.search.setPlaceholderText(
-            "Search characters..."
+            "🔍 Search characters..."
         )
 
-        # -----------------------------
+        self.search.setMinimumHeight(34)
+
+        # --------------------------------------------------
         # Table
-        # -----------------------------
+        # --------------------------------------------------
 
         self.table = QTableView()
 
-        # -----------------------------
+        self.table.setModel(self.model)
+
+        # Stretch columns
+        header = self.table.horizontalHeader()
+
+        header.setSectionResizeMode(
+            QHeaderView.Stretch
+        )
+
+        header.setStretchLastSection(True)
+
+        # Appearance
+        self.table.verticalHeader().setVisible(False)
+
+        self.table.setAlternatingRowColors(True)
+
+        self.table.setShowGrid(False)
+
+        self.table.setSortingEnabled(True)
+
+        self.table.setSelectionBehavior(
+            QAbstractItemView.SelectRows
+        )
+
+        self.table.setSelectionMode(
+            QAbstractItemView.SingleSelection
+        )
+
+        self.table.setEditTriggers(
+            QAbstractItemView.NoEditTriggers
+        )
+
+        # --------------------------------------------------
         # Footer
-        # -----------------------------
+        # --------------------------------------------------
 
-        self.status = QLabel("0 Characters")
+        self.status = QLabel()
 
-        layout.addLayout(header)
+        self.update_status()
 
-        layout.addWidget(self.search)
+        # --------------------------------------------------
+        # Layout
+        # --------------------------------------------------
 
-        layout.addWidget(self.table)
+        main_layout.addLayout(header_layout)
 
-        layout.addWidget(self.status)
+        main_layout.addWidget(self.search)
+
+        main_layout.addWidget(self.table)
+
+        main_layout.addWidget(self.status)
+
+    # ======================================================
+    # Refresh
+    # ======================================================
+
+    def refresh(self):
+        """
+        Reload data from database.
+        """
+
+        self.model.load()
+
+        self.update_status()
+
+    # ======================================================
+    # Status
+    # ======================================================
+
+    def update_status(self):
+
+        count = self.model.rowCount()
+
+        if count == 1:
+
+            self.status.setText("1 Character")
+
+        else:
+
+            self.status.setText(f"{count} Characters")
