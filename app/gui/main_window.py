@@ -1,38 +1,34 @@
 """
-=========================================================
+============================================================
 AI Studio Pro Enterprise
 
 Module      : Main Window
+Purpose     : Enterprise Application Shell
 Author      : Pritam Kumar
-Version     : 1.0.0
-
-Description :
-Main application window.
-Responsible only for assembling the UI.
-No business logic belongs here.
-=========================================================
+Version     : 0.2.0
+============================================================
 """
 
 import sys
 
 from PySide6.QtWidgets import (
     QApplication,
-    QLabel,
     QMainWindow,
     QWidget,
     QVBoxLayout,
 )
 
 from app.config.settings import (
-    WINDOW_HEIGHT,
     WINDOW_TITLE,
     WINDOW_WIDTH,
+    WINDOW_HEIGHT,
 )
 
 
 class MainWindow(QMainWindow):
     """
-    Main application window.
+    Enterprise Main Window.
+    Responsible only for assembling UI components.
     """
 
     def __init__(self):
@@ -42,9 +38,13 @@ class MainWindow(QMainWindow):
 
         self.build_ui()
 
+        self.create_connections()
+
+    # -----------------------------------------------------
+
     def configure_window(self):
         """
-        Configure the main application window.
+        Configure application window.
         """
 
         self.setWindowTitle(WINDOW_TITLE)
@@ -54,39 +54,35 @@ class MainWindow(QMainWindow):
             WINDOW_HEIGHT,
         )
 
+    # -----------------------------------------------------
+
     def build_ui(self):
         """
-        Build the initial UI.
+        Build main layout.
         """
 
         central = QWidget()
 
         self.setCentralWidget(central)
 
-        layout = QVBoxLayout()
+        self.main_layout = QVBoxLayout()
 
-        central.setLayout(layout)
+        central.setLayout(self.main_layout)
 
-        title = QLabel("AI Studio Pro Enterprise")
+    # -----------------------------------------------------
 
-        title.setStyleSheet("""
-            font-size:28px;
-            font-weight:bold;
-        """)
+    def create_connections(self):
+        """
+        Placeholder for signal-slot connections.
+        """
 
-        layout.addWidget(title)
+        pass
 
-        info = QLabel(
-            "Application Shell Loading..."
-        )
 
-        layout.addWidget(info)
+# ---------------------------------------------------------
 
 
 def main():
-    """
-    Application entry point.
-    """
 
     app = QApplication(sys.argv)
 
