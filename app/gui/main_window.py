@@ -25,6 +25,7 @@ from app.config.settings import (
 )
 
 from app.gui.widgets.menu_bar import MenuBarWidget
+from app.gui.widgets.toolbar import ToolbarWidget
 
 
 class MainWindow(QMainWindow):
@@ -40,8 +41,16 @@ class MainWindow(QMainWindow):
         self.configure_window()
         self.build_ui()
         self.create_menu()
+        
+        def create_toolbar(self):
+            """
+            Create application toolbar.
+            """
+            self.toolbar = ToolbarWidget(self)
+            self.addToolBar(self.toolbar)
+        
+        self.create_toolbar()
         self.create_connections()
-
     # -------------------------------------------------
 
     def configure_window(self):

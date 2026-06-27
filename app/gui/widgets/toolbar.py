@@ -1,49 +1,44 @@
 """
-=========================================================
+============================================================
 AI Studio Pro Enterprise
 
-Module      : Toolbar Widget
+Module      : Toolbar
+Purpose     : Enterprise Toolbar
 Author      : Pritam Kumar
-Version     : 1.0.0
-Description : Professional application toolbar
-=========================================================
+Version     : 0.2.0
+============================================================
 """
 
-from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction
 from PySide6.QtWidgets import QToolBar
 
 
 class ToolbarWidget(QToolBar):
     """
-    Main application toolbar.
+    Enterprise Toolbar.
     """
 
     def __init__(self, parent=None):
         super().__init__("Main Toolbar", parent)
 
-        self.setMovable(False)
-        self.setFloatable(False)
-
-        self.setToolButtonStyle(
-            Qt.ToolButtonTextUnderIcon
-        )
-
         self.build_toolbar()
 
     def build_toolbar(self):
-        """
-        Create toolbar buttons.
-        """
 
-        actions = [
-            "New Project",
-            "New Character",
-            "New Episode",
-            "Generate AI",
-            "Publish"
-        ]
+        self.addAction(QAction("🆕 New Project", self))
 
-        for text in actions:
-            action = QAction(text, self)
-            self.addAction(action)
+        self.addSeparator()
+
+        self.addAction(QAction("👤 Character", self))
+
+        self.addSeparator()
+
+        self.addAction(QAction("🎬 Episode", self))
+
+        self.addSeparator()
+
+        self.addAction(QAction("🤖 Generate AI", self))
+
+        self.addSeparator()
+
+        self.addAction(QAction("🚀 Publish", self))
