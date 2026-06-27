@@ -17,7 +17,17 @@ class Character:
     Enterprise Character Model.
     """
 
-    name: str
+    # -----------------------------------------------------
+    # Database Primary Key
+    # -----------------------------------------------------
+
+    id: int | None = None
+
+    # -----------------------------------------------------
+    # Character Information
+    # -----------------------------------------------------
+
+    name: str = ""
 
     nickname: str = ""
 
@@ -31,7 +41,13 @@ class Character:
 
     tags: str = ""
 
-    uuid: str = field(default_factory=lambda: str(uuid4()))
+    # -----------------------------------------------------
+    # System Information
+    # -----------------------------------------------------
+
+    uuid: str = field(
+        default_factory=lambda: str(uuid4())
+    )
 
     created_at: str = field(
         default_factory=lambda: datetime.now().isoformat(timespec="seconds")
@@ -41,12 +57,62 @@ class Character:
         default_factory=lambda: datetime.now().isoformat(timespec="seconds")
     )
 
+    # -----------------------------------------------------
+    # Validation
+    # -----------------------------------------------------
+
     def validate(self):
         """
-        Validate required fields.
+        Validate character data.
         """
 
-        if not self.name.strip():
-            raise ValueError("Character name cannot be empty.")
+        self.name = self.name.strip()
+
+        self.nickname = self.nickname.strip()
+
+        self.personality = self.personality.strip()
+
+        self.description = self.description.strip()
+
+        self.voice = self.voice.strip()
+
+        self.avatar = self.avatar.strip()
+
+        self.tags = self.tags.strip()
+
+        if not self.name:
+
+            raise ValueError(
+                "Character name cannot be empty."
+            )
 
         return True
+
+    # -----------------------------------------------------
+    # Touch
+    # -----------------------------------------------------
+
+    def touch(self):
+        """
+        Update modification timestamp.
+        """
+
+        self.updated_at = datetime.now().isoformat(
+            timespec="seconds"
+        )
+
+    # -----------------------------------------------------
+    # String Representation
+    # -----------------------------------------------------
+
+    def __str__(self):
+
+        return f"{self.name}"
+
+    def __repr__(self):
+
+        return (
+            f"Character("
+            f"id={self.id}, "
+            f"name='{self.name}')"
+        )
