@@ -1,168 +1,43 @@
-# AI Studio Pro Enterprise
+# AI Studio Pro Enterprise Architecture
 
-Version: 1.0 Enterprise
+## Overview
 
-Author: Pritam Kumar
+AI Studio Pro Enterprise follows a layered architecture.
 
----
-
-# Vision
-
-AI Studio Pro Enterprise is an enterprise desktop platform for creating,
-managing, automating and publishing AI-generated media across multiple
-platforms.
-
-Supported Platforms
-
-- YouTube
-- Facebook
-- Instagram
-- WhatsApp
-- X
-- LinkedIn
-
----
-
-# Technology Stack
-
-Language
-
-- Python
-
-GUI
-
-- PySide6
-
-Database
-
-- SQLite
-- SQLAlchemy
-
-Version Control
-
-- Git
-- GitHub
-
-IDE
-
-- Visual Studio Code
-
----
-
-# Architecture
-
+```
 Presentation Layer
+        │
+        ▼
+Business Layer
+        │
+        ▼
+Service Layer
+        │
+        ▼
+Database Layer
+```
 
-↓
+## Presentation Layer
 
-Controllers
+- MainWindow
+- MenuBar
+- Toolbar
+- Sidebar
+- Pages
+- Dialogs
 
-↓
+## Business Layer
 
-Services
+- Controllers
 
-↓
+## Service Layer
 
-Database
+- AI Services
+- Publishing Services
 
-↓
+## Database Layer
 
-SQLite
+- SQLAlchemy
+- SQLite
 
----
-
-# Folder Structure
-
-app/
-
-config/
-
-controllers/
-
-database/
-
-gui/
-
-models/
-
-services/
-
-utils/
-
-assets/
-
-content/
-
-data/
-
-docs/
-
-logs/
-
-tests/
-
----
-
-# Coding Standards
-
-PEP8
-
-Type hints
-
-Docstrings
-
-One class per file
-
-One responsibility per module
-
----
-
-# Git Workflow
-
-Feature Branch
-
-↓
-
-Develop
-
-↓
-
-Main
-
----
-
-# Future Modules
-
-Dashboard
-
-Characters
-
-Episodes
-
-Prompts
-
-Assets
-
-AI Engine
-
-Publishing
-
-Analytics
-
-Settings
-
----
-
-# Deployment
-
-Windows Desktop
-
-Linux Desktop
-
-macOS Desktop
-
-Future Web Version
-
-Future Cloud Version
-
-Future Mobile Companion
+The Presentation Layer must never communicate directly with the database.
