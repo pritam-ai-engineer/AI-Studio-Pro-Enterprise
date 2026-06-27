@@ -1,11 +1,6 @@
 """
 ============================================================
-AI Studio Pro Enterprise
-
-Module      : Navigation Controller
-Purpose     : Handles page navigation
-Author      : Pritam Kumar
-Version     : 0.2.0-alpha
+Navigation Controller
 ============================================================
 """
 
@@ -14,16 +9,16 @@ from PySide6.QtCore import QObject
 
 class NavigationController(QObject):
     """
-    Handles navigation between pages.
+    Controls page navigation.
     """
 
-    def __init__(self, stacked_widget):
+    def __init__(self, sidebar, workspace):
         super().__init__()
 
-        self.stacked_widget = stacked_widget
+        self.sidebar = sidebar
 
-    def show_page(self, index: int):
-        """
-        Display page by index.
-        """
-        self.stacked_widget.setCurrentIndex(index)
+        self.workspace = workspace
+
+        self.sidebar.currentRowChanged.connect(
+            self.workspace.setCurrentIndex
+        )

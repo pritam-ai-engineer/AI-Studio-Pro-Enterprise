@@ -8,23 +8,20 @@ Workspace
 
 from PySide6.QtWidgets import QStackedWidget
 
+from app.gui.pages.dashboard_page import DashboardPage
+
 
 class Workspace(QStackedWidget):
     """
     Enterprise Workspace.
-
     Holds all application pages.
     """
 
     def __init__(self):
-
         super().__init__()
 
-        self.initialize()
+        self.dashboard_page = DashboardPage()
 
-    def initialize(self):
-        """
-        Initialize workspace.
-        """
+        self.addWidget(self.dashboard_page)
 
-        pass
+        self.setCurrentWidget(self.dashboard_page)
